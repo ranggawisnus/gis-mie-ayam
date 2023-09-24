@@ -24,8 +24,8 @@ export default function Dashboard({ auth }) {
                     <div className="h-max">
                         <Map
                             initialViewState={{
-                                longitude: 106.8291201,
-                                latitude: -6.1836782,
+                                longitude: 106.7362,
+                                latitude: -6.3442,
                                 zoom: 12,
                             }}
                             style={{ width: "100%", height: 600 }}
