@@ -1,3 +1,4 @@
+import { isValidURL } from "@/utils/utils";
 import React, { forwardRef } from "react";
 import Slider from "react-slick";
 
@@ -8,7 +9,7 @@ const settings = {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
-    autoplay: false,
+    autoplay: true,
     variableWidth: true,
     pauseOnHover: true,
     swipeToSlide: true,
@@ -28,12 +29,16 @@ const ItemSlider = forwardRef(
                             "pr-4 h-32 w-40 hover:cursor-pointer hover:opacity-80"
                         }
                         onClick={() => {
-                            handleJumpTo(location.long, location.lat);
+                            handleJumpTo(location);
                             setPopupInfo(location);
                         }}
                     >
                         <img
-                            src={location.image}
+                            src={
+                                isValidURL(location.image)
+                                    ? location.image
+                                    : "/images/" + location.image
+                            }
                             className="object-cover h-full w-full aspect-video rounded-sm"
                         />
                         <p className="text-white/80 mt-2 w-40 text-lg">
