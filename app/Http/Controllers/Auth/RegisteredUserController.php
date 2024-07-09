@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -42,6 +43,14 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        
+        // Check if the 'user' role exists, if not create it
+        $userRole = Role::firstOrCreate(['name' => 'user']);
+
+        // Assign the 'user' role to the newly created user
+        // This assumes a foreign key on the users table for simplicity
+        $user->role_id = $userRole->id;
+        $user->save();
 
         event(new Registered($user));
 
