@@ -1,5 +1,8 @@
+import logo from "../../../public/icons/map.png";
 import ItemSlider from "@/Components/ItemSlider";
+import RatingStar from "@/Components/RatingStar";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { isValidURL } from "@/utils/utils";
 import { Head, usePage } from "@inertiajs/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Map, {
@@ -13,6 +16,8 @@ import Map, {
 
 export default function Dashboard({ auth }) {
     const { locations } = usePage().props;
+
+    console.log(auth.user);
 
     const [allLocations, setAllLocations] = useState([]);
 
@@ -106,7 +111,7 @@ export default function Dashboard({ auth }) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 dark:text-gray-100">
-                            Selamat Datang
+                            Selamat Datang {auth.user.name} di Dashboard GIS
                         </div>
                     </div>
                     <div className="h-max">
@@ -136,18 +141,42 @@ export default function Dashboard({ auth }) {
                                     longitude={Number(popupInfo.long)}
                                     latitude={Number(popupInfo.lat)}
                                     onClose={() => setPopupInfo(null)}
+                                    className="rounded-lg shadow-lg overflow-hidden"
                                 >
-                                    <div className="mb-3">
-                                        <h2 className="font-semibold mb-2 text-lg">
+                                    <div className="px-4 pb-4 bg-white">
+                                        <h2 className="font-semibold text-lg mb-2 flex justify-between items-center">
                                             {popupInfo.name}
                                         </h2>
-                                        <p>{popupInfo.description}</p>
-                                        <p>Rating: {popupInfo.rating}</p>
+
+                                        <p className="text-gray-600 mb-2">
+                                            {popupInfo.description}
+                                        </p>
+                                        <div className="flex justify-between">
+                                            <RatingStar
+                                                rating={+popupInfo.rating}
+                                            />
+                                            <a
+                                                href={`https://www.google.com/maps?q=${popupInfo.lat},${popupInfo.long}`}
+                                                target="_blank"
+                                                title="Buka di Google Maps"
+                                                className="text-blue-500 hover:text-blue-700 transition-colors duration-200 ml-2"
+                                            >
+                                                <img
+                                                    src={logo}
+                                                    alt="Google Maps Icon"
+                                                    className="w-4 inline-block"
+                                                />
+                                            </a>
+                                        </div>
                                     </div>
                                     <img
                                         width="100%"
-                                        src={"/images/" + popupInfo.image}
-                                        className="object-cover rounded-sm"
+                                        src={
+                                            isValidURL(popupInfo.image)
+                                                ? popupInfo.image
+                                                : "/images/" + popupInfo.image
+                                        }
+                                        className="object-cover"
                                     />
                                 </Popup>
                             )}
